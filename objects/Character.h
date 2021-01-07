@@ -9,16 +9,17 @@ struct Point {
 };
 
 class Character {
- private:
+ protected:
   std::size_t hp;
   std::int32_t damage;
   Point location;
   char symbol;
  public:
-  virtual Point GetPos() const = 0;
-  virtual std::size_t GetHp() const = 0;
-  virtual std::int32_t GetDamage() const = 0;
-  virtual char GetSymbol() const = 0;
+  Point GetPos() const { return location; }
+  std::size_t GetHp() const { return hp; }
+  std::int32_t GetDamage() const { return damage; }
+  char GetSymbol() const { return symbol; }
+  virtual Point Move() = 0;
 };
 
 #endif //ROUGELIKE_GAME_OBJECTS_CHARACTER_CPP_
