@@ -6,14 +6,13 @@
 
 class Knight : Character {
  public:
-  Knight() {
+  Knight(std::int32_t x, std::int32_t y) : Character(x, y) {
     hp = 10;
     damage = 3;
-    location = Point{0, 0}; //todo random location
     symbol = 'K';
   }
-  Point MoveUp() {
-    location.y + 1;
+  Point Move() {
+    location.y += 1;
     return location;
   }
   // todo write MoveDown, MoveLeft, MoveRight

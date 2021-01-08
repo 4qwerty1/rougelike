@@ -10,10 +10,9 @@ class Dragon : Character {
   std::random_device rd;
   std::mt19937 gen;
 
-  Dragon() {
+  Dragon(std::int32_t x, std::int32_t y) : Character(x, y) {
     hp = 5;
     damage = 3;
-    location = {2, 2};  // todo random location
     symbol = 'D';
   }
   Point Move() override {

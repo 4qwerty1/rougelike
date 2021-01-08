@@ -10,10 +10,9 @@ class Zombie : Character {
   std::random_device rd;
   std::mt19937 gen;
 
-  Zombie() {
+  Zombie(std::int32_t x, std::int32_t y) : Character(x, y) {
     hp = 3;
     damage = 1;
-    location = {4, 4};  // todo random location
     symbol = 'Z';
 
     gen = std::mt19937(rd());

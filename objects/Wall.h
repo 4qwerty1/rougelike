@@ -7,10 +7,9 @@
 #include "Character.h"
 
 class Wall : Character {
-  Wall() {
+  Wall(std::int32_t x, std::int32_t y) : Character(x, y){
     hp = std::numeric_limits<std::size_t>::infinity();
     damage = 0;
-    location = {3, 4};  // todo random location
     symbol = '#';
   }
   Point Move() override {

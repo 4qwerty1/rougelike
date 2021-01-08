@@ -6,10 +6,9 @@
 
 class Princess : Character {
  public:
-  Princess(std::int32_t x, std::int32_t y) {
+  Princess(std::int32_t x, std::int32_t y) : Character(x, y) {
     hp = 1;
     damage = 0;
-    location = {x, y};  // todo random location
     symbol = 'P';
   }
   Point Move() override {
