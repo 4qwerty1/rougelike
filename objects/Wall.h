@@ -6,11 +6,13 @@
 #include <limits>
 #include "Character.h"
 
-class Wall : Character {
-  Wall(std::int32_t x, std::int32_t y) : Character(x, y){
+class Wall : public Character {
+ public:
+  Wall(std::int32_t x, std::int32_t y) {
     hp = std::numeric_limits<std::size_t>::infinity();
     damage = 0;
     symbol = '#';
+    location = Point{x, y};
   }
   Point Move() override {
     return location;

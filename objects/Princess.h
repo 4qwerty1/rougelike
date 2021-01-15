@@ -4,12 +4,13 @@
 #include <iostream>
 #include "Character.h"
 
-class Princess : Character {
+class Princess : public Character {
  public:
-  Princess(std::int32_t x, std::int32_t y) : Character(x, y) {
+  Princess(std::int32_t x, std::int32_t y) {
     hp = 1;
     damage = 0;
     symbol = 'P';
+    location = Point{x, y};
   }
   Point Move() override {
     return location;

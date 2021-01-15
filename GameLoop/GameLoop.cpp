@@ -2,22 +2,32 @@
 #include <conio.h>
 #include <memory>
 
-#include "../objects/Map/Map.h"
-#include "../objects/Knight.h"
-
-
 #include "GameLoop.h"
 
-int main() {
-  int key;
-  Map map;
-  std::vector<std::shared_ptr<Character>> characters;
+GameLoop::GameLoop() /*: map(&characters, &factory_)*/ {
+  addMobs();
+  map = Map(&characters, &factory_);
+}
 
+void GameLoop::addMobs() {
+  factory_.add<Dragon>('D');
+  factory_.add<Knight>('K');
+  factory_.add<Princess>('P');
+  factory_.add<Wall>('#');
+  factory_.add<Zombie>('Z');
+}
+
+
+void GameLoop::start() {
+  int key;
+  std::cout << "game loop start" << std::endl;
   do {
     key = getch();
     system("cls");
     std::cout << key << std::endl;
     map.Draw();
+
+
 
     switch (key) {
       case 72:  // up
@@ -37,5 +47,4 @@ int main() {
     }
 
   } while (key != 27);
-  return 0;
 }

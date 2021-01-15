@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 #include <fstream>
 #include <string>
+#include "../../Factory/Factory.h"
 #include "../Character.h"
 #include "../Knight.h"
 
@@ -20,9 +22,8 @@
 class Map {
  private:
   std::vector<std::string> map;
-  std::vector<std::shared_ptr<Character>> characters;
-  std::size_t width;
-  std::size_t height;
+  std::vector<std::shared_ptr<Character>> *characters;
+  Factory *factory_;
 
   void readFile() {
     std::string line;
@@ -37,22 +38,25 @@ class Map {
     fin.close();
   }
   void fillMap() {
-    // заполнить карту в соответствии со смещением героев
+    map = std::vector<std::string>(Height(), std::string(Width(), '.'));
+    for (auto &i : *characters) {
+      Point point = i->GetPos();
+      map[point.x][point.y] = i->GetSymbol();
+    }
   }
   void createCharacters() {
     for (int i = 0; i < map.size(); i++) {
       for (int j = 0; j < map[i].size(); j++) {
-        switch (map[i][j]) {
-          case 'K':
-              Knight test(4, 1);
-            characters.push_back(std::shared_ptr<Character>(&test));
-            characters.push_back(std::make_shared<Knight>(&test));
+        if (map[i][j] != '.') {
+          characters->push_back(std::shared_ptr<Character>(factory_->create(map[i][j], i, j)));
         }
       }
     }
   }
  public:
-  Map() {
+  Map() = default;
+  Map(std::vector<std::shared_ptr<Character>> *characters, Factory *factory)
+      : characters(characters), factory_(factory) {
     readFile();
     createCharacters();
   }
@@ -67,9 +71,6 @@ class Map {
   }
   std::size_t Height() {
     return map.size();
-  }
-  auto getCharacters() {
-    return characters;
   }
 };
 

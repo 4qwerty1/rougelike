@@ -14,9 +14,8 @@ class Character {
   std::int32_t damage;
   Point location;
   char symbol;
- public:
-  Character(std::int32_t x, std::int32_t y) : location{x, y} {}
 
+ public:
   Point GetPos() const { return location; }
   std::size_t GetHp() const { return hp; }
   std::int32_t GetDamage() const { return damage; }

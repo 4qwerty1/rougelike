@@ -4,12 +4,13 @@
 #include <iostream>
 #include "Character.h"
 
-class Knight : Character {
+class Knight : public Character {
  public:
-  Knight(std::int32_t x, std::int32_t y) : Character(x, y) {
+  Knight(std::int32_t x, std::int32_t y) {
     hp = 10;
     damage = 3;
     symbol = 'K';
+    location = Point{x, y};
   }
   Point Move() {
     location.y += 1;

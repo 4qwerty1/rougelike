@@ -5,21 +5,15 @@
 #include <random>
 #include "Character.h"
 
-class Dragon : Character {
- private:
-  std::random_device rd;
-  std::mt19937 gen;
-
-  Dragon(std::int32_t x, std::int32_t y) : Character(x, y) {
+class Dragon : public Character {
+ public:
+  Dragon(std::int32_t x, std::int32_t y) {
     hp = 5;
     damage = 3;
     symbol = 'D';
+    location = Point{x, y};
   }
   Point Move() override {
-    std::uniform_int_distribution<> dist(-2,2);
-    location.x += dist(gen);
-    location.y += dist(gen);
-
     return location;
   }
 };
