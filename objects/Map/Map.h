@@ -7,8 +7,8 @@
 #include <fstream>
 #include <string>
 #include "../../Factory/Factory.h"
-#include "../Character.h"
-#include "../Knight.h"
+#include "../Character/Character.h"
+#include "../Knight/Knight.h"
 
 
 // Вывод карты без мерцания

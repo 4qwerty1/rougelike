@@ -2,7 +2,7 @@
 #define ROUGELIKE_GAME_FACTORY_FACTORY_H_
 
 #include <map>
-#include "../objects/Character.h"
+#include "../objects/Character/Character.h"
 
 struct abstractCreator {
   virtual Character *create(std::int32_t x, std::int32_t y) const = 0;
