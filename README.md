@@ -48,7 +48,7 @@ public:
 
 GetPos - функция, возращающая координаты
 
-GetHp, GetDamage, GetSym - геттеры для hp, damage и sym соответственно 
+Hp, Damage, GetSym - геттеры для hp, damage и sym соответственно 
 
 
 

@@ -3,7 +3,9 @@
 
 
 #include <conio.h>
-#include "../objects/Map/Map.h"
+#include <map>
+#include "../Config/Config.h"
+#include "../Map/Map.h"
 #include "../Factory/Factory.h"
 #include "../objects/Character/Character.h"
 #include "../objects/Dragon/Dragon.h"
@@ -14,10 +16,12 @@
 
 class GameLoop {
  private:
-  Factory factory_;
+  Factory factory_;  // todo сменить все на shared_ptr
   Map map;
   std::vector<std::shared_ptr<Character>> characters;
   std::shared_ptr<Character> knight_;
+  Config conf;
+
 
  public:
   GameLoop();

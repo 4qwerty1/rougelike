@@ -25,10 +25,16 @@ void GameLoop::MoveMobs() {
   }
 }
 void GameLoop::ValidateMoves() {
+  bool flag1 = knight_->X() < 0;
+  bool flag2 = knight_->X() >= map.Width();
+  bool flag3 = knight_->Y() < 0;
+  bool flag4 = knight_->Y() >= map.Height();
+  if (flag1 || flag2 || flag3 || flag4) knight_->GoBack();
+
   for (int i = 0; i < characters.size(); i++) {
     for (int j = i + 1; j < characters.size(); j++) {
       if (characters[i]->GetPos() == characters[j]->GetPos()) {
-        characters[i]->Fight(characters[j].get());
+        characters[i]->Collide(characters[j].get());
       }
     }
   }
@@ -36,7 +42,7 @@ void GameLoop::ValidateMoves() {
 void GameLoop::RemoveDead() {
   std::vector<std::shared_ptr<Character>> alive;
   for (auto &i : characters) {
-    if (i->GetHp() > 0) {
+    if (i->Hp() > 0) {
       alive.push_back(i);
     }
   }
@@ -45,7 +51,7 @@ void GameLoop::RemoveDead() {
 
 void GameLoop::FindKnight() {
   for (auto &i : characters) {
-    if (i->GetSymbol() == 'K') {
+    if (i->Symbol() == 'K') {
       knight_ = i;
       return;
     }
@@ -83,7 +89,7 @@ void GameLoop::Start() {
     ValidateMoves();
     RemoveDead();
     system("cls");
-//    std::cout << std::endl;
+    std::cout << knight_->Hp() << std::endl;
     map.Draw();
   } while (key != 27);
 }
