@@ -1,5 +1,6 @@
 #include "Princess.h"
 #include "../../Config/Config.h"
+#include "../../GameLoop/GameLoop.h"
 
 
 Princess::Princess() {
@@ -18,21 +19,21 @@ Point Princess::Move(std::int32_t x, std::int32_t y) {
 }
 
 bool Princess::Collide(Character *character) {
-  return true;
+  return character->Collide(this);
 }
 bool Princess::Collide(Knight *knight) {
-
+  GameLoop::GameOver(true);
   return true;
 }
 bool Princess::Collide(Dragon *dragon) {
-  return true;
+  return false;
 }
 bool Princess::Collide(Princess *princess) {
-  return true;
+  return false;
 }
 bool Princess::Collide(Zombie *zombie) {
-  return true;
+  return false;
 }
 bool Princess::Collide(Wall *wall) {
-  return true;
+  return false;
 }

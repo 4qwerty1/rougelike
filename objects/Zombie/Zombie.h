@@ -8,6 +8,7 @@
 
 class Zombie : public Character {
  private:
+  std::int32_t vision;
   bool isInView(Point &vector) const;
  public:
   Zombie();

@@ -6,6 +6,9 @@
 #include "../Character/Character.h"
 
 class Dragon : public Character {
+ private:
+  std::int32_t vision;
+  bool IsInView(Point &vector) const;
  public:
   Dragon();
   Dragon(std::int32_t x, std::int32_t y);

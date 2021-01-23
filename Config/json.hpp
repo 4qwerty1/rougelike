@@ -58,7 +58,7 @@ SOFTWARE.
 #include <array> // array
 #include <forward_list> // forward_list
 #include <iterator> // inserter, front_inserter, end
-#include <map> // map
+#include <map> // map_
 #include <string> // string
 #include <tuple> // tuple, make_tuple
 #include <type_traits> // is_arithmetic, is_same, is_enum, underlying_type, is_convertible
@@ -85,9 +85,9 @@ namespace detail
 /// struct to capture the start position of the current token
 struct position_t
 {
-    /// the total number of characters read
+    /// the total number of characters_ read
     std::size_t chars_read_total = 0;
-    /// the number of characters read in the current line
+    /// the number of characters_ read in the current line
     std::size_t chars_read_current_line = 0;
     /// the number of lines read
     std::size_t lines_read = 0;
@@ -2458,7 +2458,7 @@ Exceptions have ids 1xx.
 name / id                      | example message | description
 ------------------------------ | --------------- | -------------------------
 json.exception.parse_error.101 | parse error at 2: unexpected end of input; expected string literal | This error indicates a syntax error while deserializing a JSON text. The error message describes that an unexpected token (character) was encountered, and the member @a byte indicates the error position.
-json.exception.parse_error.102 | parse error at 14: missing or wrong low surrogate | JSON uses the `\uxxxx` format to describe Unicode characters. Code points above above 0xFFFF are split into two `\uxxxx` entries ("surrogate pairs"). This error indicates that the surrogate pair is incomplete or contains an invalid code point.
+json.exception.parse_error.102 | parse error at 14: missing or wrong low surrogate | JSON uses the `\uxxxx` format to describe Unicode characters_. Code points above above 0xFFFF are split into two `\uxxxx` entries ("surrogate pairs"). This error indicates that the surrogate pair is incomplete or contains an invalid code point.
 json.exception.parse_error.103 | parse error: code points above 0x10FFFF are invalid | Unicode supports code points up to 0x10FFFF. Code points above 0x10FFFF are invalid.
 json.exception.parse_error.104 | parse error: JSON patch must be an array of objects | [RFC 6902](https://tools.ietf.org/html/rfc6902) requires a JSON Patch document to be a JSON document that represents an array of objects.
 json.exception.parse_error.105 | parse error: operation must have string member 'op' | An operation of a JSON Patch document must contain exactly one "op" member, whose value indicates the operation to perform. Its value must be one of "add", "remove", "replace", "move", "copy", or "test"; other values are errors.
@@ -2468,7 +2468,7 @@ json.exception.parse_error.108 | parse error: escape character '~' must be follo
 json.exception.parse_error.109 | parse error: array index 'one' is not a number | A JSON Pointer array index must be a number.
 json.exception.parse_error.110 | parse error at 1: cannot read 2 bytes from vector | When parsing CBOR or MessagePack, the byte vector ends before the complete value has been read.
 json.exception.parse_error.112 | parse error at 1: error reading CBOR; last byte: 0xF8 | Not all types of CBOR or MessagePack are supported. This exception occurs if an unsupported byte was read.
-json.exception.parse_error.113 | parse error at 2: expected a CBOR string; last byte: 0x98 | While parsing a map key, a value that is not a string has been read.
+json.exception.parse_error.113 | parse error at 2: expected a CBOR string; last byte: 0x98 | While parsing a map_ key, a value that is not a string has been read.
 json.exception.parse_error.114 | parse error: Unsupported BSON record type 0x0F | The parsing of the corresponding BSON record type is not implemented (yet).
 json.exception.parse_error.115 | parse error at byte 5: syntax error while parsing UBJSON high-precision number: invalid number text: 1A | A UBJSON high-precision number could not be parsed.
 
@@ -2958,7 +2958,7 @@ using is_detected_convertible =
 #define INCLUDE_NLOHMANN_JSON_FWD_HPP_
 
 #include <cstdint> // int64_t, uint64_t
-#include <map> // map
+#include <map> // map_
 #include <memory> // allocator
 #include <string> // string
 #include <vector> // vector
@@ -4874,7 +4874,7 @@ Input adapter for a (caching) istream. Ignores a UFT Byte Order Mark at
 beginning of input. Does not support changing the underlying std::streambuf
 in mid-input. Maintains underlying std::istream and std::streambuf to support
 subsequent use of standard std::istream operations to process any input
-characters following those used in parsing the JSON input.  Clears the
+characters_ following those used in parsing the JSON input.  Clears the
 std::istream flags; any input errors (e.g., EOF) will be detected by the first
 subsequent call for input from the std::istream.
 */
@@ -6136,13 +6136,13 @@ class lexer : public lexer_base<BasicJsonType>
     /////////////////////
 
     /*!
-    @brief get codepoint from 4 hex characters following `\u`
+    @brief get codepoint from 4 hex characters_ following `\u`
 
     For input "\u c1 c2 c3 c4" the codepoint is:
       (c1 * 0x1000) + (c2 * 0x0100) + (c3 * 0x0010) + c4
     = (c1 << 12) + (c2 << 8) + (c3 << 4) + (c4 << 0)
 
-    Furthermore, the possible characters '0'..'9', 'A'..'F', and 'a'..'f'
+    Furthermore, the possible characters_ '0'..'9', 'A'..'F', and 'a'..'f'
     must be converted to the integers 0x0..0x9, 0xA..0xF, 0xA..0xF, resp. The
     conversion is done by subtracting the offset (0x30, 0x37, and 0x57)
     between the ASCII value of the character and the desired integer value.
@@ -6366,25 +6366,25 @@ class lexer : public lexer_base<BasicJsonType>
                             // translate codepoint into bytes
                             if (codepoint < 0x80)
                             {
-                                // 1-byte characters: 0xxxxxxx (ASCII)
+                                // 1-byte characters_: 0xxxxxxx (ASCII)
                                 add(static_cast<char_int_type>(codepoint));
                             }
                             else if (codepoint <= 0x7FF)
                             {
-                                // 2-byte characters: 110xxxxx 10xxxxxx
+                                // 2-byte characters_: 110xxxxx 10xxxxxx
                                 add(static_cast<char_int_type>(0xC0u | (static_cast<unsigned int>(codepoint) >> 6u)));
                                 add(static_cast<char_int_type>(0x80u | (static_cast<unsigned int>(codepoint) & 0x3Fu)));
                             }
                             else if (codepoint <= 0xFFFF)
                             {
-                                // 3-byte characters: 1110xxxx 10xxxxxx 10xxxxxx
+                                // 3-byte characters_: 1110xxxx 10xxxxxx 10xxxxxx
                                 add(static_cast<char_int_type>(0xE0u | (static_cast<unsigned int>(codepoint) >> 12u)));
                                 add(static_cast<char_int_type>(0x80u | ((static_cast<unsigned int>(codepoint) >> 6u) & 0x3Fu)));
                                 add(static_cast<char_int_type>(0x80u | (static_cast<unsigned int>(codepoint) & 0x3Fu)));
                             }
                             else
                             {
-                                // 4-byte characters: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+                                // 4-byte characters_: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
                                 add(static_cast<char_int_type>(0xF0u | (static_cast<unsigned int>(codepoint) >> 18u)));
                                 add(static_cast<char_int_type>(0x80u | ((static_cast<unsigned int>(codepoint) >> 12u) & 0x3Fu)));
                                 add(static_cast<char_int_type>(0x80u | ((static_cast<unsigned int>(codepoint) >> 6u) & 0x3Fu)));
@@ -6394,7 +6394,7 @@ class lexer : public lexer_base<BasicJsonType>
                             break;
                         }
 
-                        // other characters after escape
+                        // other characters_ after escape
                         default:
                             error_message = "invalid string: forbidden character after backslash";
                             return token_type::parse_error;
@@ -6403,7 +6403,7 @@ class lexer : public lexer_base<BasicJsonType>
                     break;
                 }
 
-                // invalid control characters
+                // invalid control characters_
                 case 0x00:
                 {
                     error_message = "invalid string: control character U+0000 (NUL) must be escaped to \\u0000";
@@ -6988,7 +6988,7 @@ class lexer : public lexer_base<BasicJsonType>
                 goto scan_number_any1;
             }
 
-            // all other characters are rejected outside scan_number()
+            // all other characters_ are rejected outside scan_number()
             default:            // LCOV_EXCL_LINE
                 JSON_ASSERT(false);  // LCOV_EXCL_LINE
         }
@@ -7313,7 +7313,7 @@ scan_number_done:
 
     This function provides the interface to the used input adapter. It does
     not throw in case the input reached EOF, but returns a
-    `std::char_traits<char>::eof()` in that case.  Stores the scanned characters
+    `std::char_traits<char>::eof()` in that case.  Stores the scanned characters_
     for use in error messages.
 
     @return character read from the input
@@ -7431,13 +7431,13 @@ scan_number_done:
     /// 255 may legitimately occur.  May contain NUL, which should be escaped.
     std::string get_token_string() const
     {
-        // escape control characters
+        // escape control characters_
         std::string result;
         for (const auto c : token_string)
         {
             if (static_cast<unsigned char>(c) <= '\x1F')
             {
-                // escape control characters
+                // escape control characters_
                 std::array<char, 9> cs{{}};
                 (std::snprintf)(cs.data(), cs.size(), "<U+%.4X>", static_cast<unsigned char>(c));
                 result += cs.data();
@@ -7516,7 +7516,7 @@ scan_number_done:
 
         switch (current)
         {
-            // structural characters
+            // structural characters_
             case '[':
                 return token_type::begin_array;
             case ']':
@@ -8388,7 +8388,7 @@ class binary_reader
             case 0x9F: // array (indefinite length)
                 return get_cbor_array(std::size_t(-1), tag_handler);
 
-            // map (0x00..0x17 pairs of data items follow)
+            // map_ (0x00..0x17 pairs of data items follow)
             case 0xA0:
             case 0xA1:
             case 0xA2:
@@ -8415,31 +8415,31 @@ class binary_reader
             case 0xB7:
                 return get_cbor_object(static_cast<std::size_t>(static_cast<unsigned int>(current) & 0x1Fu), tag_handler);
 
-            case 0xB8: // map (one-byte uint8_t for n follows)
+            case 0xB8: // map_ (one-byte uint8_t for n follows)
             {
                 std::uint8_t len{};
                 return get_number(input_format_t::cbor, len) && get_cbor_object(static_cast<std::size_t>(len), tag_handler);
             }
 
-            case 0xB9: // map (two-byte uint16_t for n follow)
+            case 0xB9: // map_ (two-byte uint16_t for n follow)
             {
                 std::uint16_t len{};
                 return get_number(input_format_t::cbor, len) && get_cbor_object(static_cast<std::size_t>(len), tag_handler);
             }
 
-            case 0xBA: // map (four-byte uint32_t for n follow)
+            case 0xBA: // map_ (four-byte uint32_t for n follow)
             {
                 std::uint32_t len{};
                 return get_number(input_format_t::cbor, len) && get_cbor_object(static_cast<std::size_t>(len), tag_handler);
             }
 
-            case 0xBB: // map (eight-byte uint64_t for n follow)
+            case 0xBB: // map_ (eight-byte uint64_t for n follow)
             {
                 std::uint64_t len{};
                 return get_number(input_format_t::cbor, len) && get_cbor_object(static_cast<std::size_t>(len), tag_handler);
             }
 
-            case 0xBF: // map (indefinite length)
+            case 0xBF: // map_ (indefinite length)
                 return get_cbor_object(std::size_t(-1), tag_handler);
 
             case 0xC6: // tagged item
@@ -9193,13 +9193,13 @@ class binary_reader
                 return get_number(input_format_t::msgpack, len) && get_msgpack_array(static_cast<std::size_t>(len));
             }
 
-            case 0xDE: // map 16
+            case 0xDE: // map_ 16
             {
                 std::uint16_t len{};
                 return get_number(input_format_t::msgpack, len) && get_msgpack_object(static_cast<std::size_t>(len));
             }
 
-            case 0xDF: // map 32
+            case 0xDF: // map_ 32
             {
                 std::uint32_t len{};
                 return get_number(input_format_t::msgpack, len) && get_msgpack_object(static_cast<std::size_t>(len));
@@ -10064,11 +10064,11 @@ class binary_reader
     }
 
     /*!
-    @brief create a string by reading characters from the input
+    @brief create a string by reading characters_ from the input
 
     @tparam NumberType the type of the number
     @param[in] format the current format (for diagnostics)
-    @param[in] len number of characters to read
+    @param[in] len number of characters_ to read
     @param[out] result string created by reading @a len bytes
 
     @return whether string creation completed
@@ -10199,7 +10199,7 @@ class binary_reader
     /// the current character
     char_int_type current = std::char_traits<char_type>::eof();
 
-    /// the number of characters read
+    /// the number of characters_ read
     std::size_t chars_read = 0;
 
     /// whether we can assume little endianess
@@ -13506,13 +13506,13 @@ class binary_writer
                 }
                 else if (N <= (std::numeric_limits<std::uint16_t>::max)())
                 {
-                    // map 16
+                    // map_ 16
                     oa->write_character(to_char_type(0xDE));
                     write_number(static_cast<std::uint16_t>(N));
                 }
                 else if (N <= (std::numeric_limits<std::uint32_t>::max)())
                 {
-                    // map 32
+                    // map_ 32
                     oa->write_character(to_char_type(0xDF));
                     write_number(static_cast<std::uint32_t>(N));
                 }
@@ -15642,9 +15642,9 @@ class serializer
 
     @param[in] val               value to serialize
     @param[in] pretty_print      whether the output shall be pretty-printed
-    @param[in] ensure_ascii If @a ensure_ascii is true, all non-ASCII characters
+    @param[in] ensure_ascii If @a ensure_ascii is true, all non-ASCII characters_
     in the output are escaped with `\uXXXX` sequences, and the result consists
-    of ASCII characters only.
+    of ASCII characters_ only.
     @param[in] indent_step       the indent level
     @param[in] current_indent    the current indent level (only used internally)
     */
@@ -15921,13 +15921,13 @@ class serializer
     /*!
     @brief dump escaped string
 
-    Escape a string by replacing certain special characters by a sequence of an
+    Escape a string by replacing certain special characters_ by a sequence of an
     escape character (backslash) and another character and other control
-    characters by a sequence of "\u" followed by a four-digit hex
+    characters_ by a sequence of "\u" followed by a four-digit hex
     representation. The escaped string is written to output stream @a o.
 
     @param[in] s  the string to escape
-    @param[in] ensure_ascii  whether to escape non-ASCII characters with
+    @param[in] ensure_ascii  whether to escape non-ASCII characters_ with
                              \uXXXX sequences
 
     @complexity Linear in the length of string @a s.
@@ -16003,8 +16003,8 @@ class serializer
 
                         default:
                         {
-                            // escape control characters (0x00..0x1F) or, if
-                            // ensure_ascii parameter is used, non-ASCII characters
+                            // escape control characters_ (0x00..0x1F) or, if
+                            // ensure_ascii parameter is used, non-ASCII characters_
                             if ((codepoint <= 0x1F) || (ensure_ascii && (codepoint >= 0x7F)))
                             {
                                 if (codepoint <= 0xFFFF)
@@ -16070,7 +16070,7 @@ class serializer
                             }
 
                             // reset length buffer to the last accepted index;
-                            // thus removing/ignoring the invalid characters
+                            // thus removing/ignoring the invalid characters_
                             bytes = bytes_after_last_accept;
 
                             if (error_handler == error_handler_t::replace)
@@ -16521,7 +16521,7 @@ class serializer
 namespace nlohmann
 {
 
-/// ordered_map: a minimal map-like container that preserves insertion order
+/// ordered_map: a minimal map_-like container that preserves insertion order
 /// for use within nlohmann::basic_json<ordered_map>
 template <class Key, class T, class IgnoredLess = std::less<Key>,
           class Allocator = std::allocator<std::pair<const Key, T>>>
@@ -16712,7 +16712,7 @@ namespace nlohmann
 /*!
 @brief a class to store JSON values
 
-@tparam ObjectType type for JSON objects (`std::map` by default; will be used
+@tparam ObjectType type for JSON objects (`std::map_` by default; will be used
 in @ref object_t)
 @tparam ArrayType type for JSON arrays (`std::vector` by default; will be used
 in @ref array_t)
@@ -17055,7 +17055,7 @@ class basic_json
     To store objects in C++, a type is defined by the template parameters
     described below.
 
-    @tparam ObjectType  the container to store objects (e.g., `std::map` or
+    @tparam ObjectType  the container to store objects (e.g., `std::map_` or
     `std::unordered_map`)
     @tparam StringType the type of the keys or names (e.g., `std::string`).
     The comparison function `std::less<StringType>` is used to order elements
@@ -17065,12 +17065,12 @@ class basic_json
 
     #### Default type
 
-    With the default values for @a ObjectType (`std::map`), @a StringType
+    With the default values for @a ObjectType (`std::map_`), @a StringType
     (`std::string`), and @a AllocatorType (`std::allocator`), the default
     value for @a object_t is:
 
     @code {.cpp}
-    std::map<
+    std::map_<
       std::string, // key_type
       basic_json, // value_type
       std::less<std::string>, // key_compare
@@ -17122,7 +17122,7 @@ class basic_json
     @note The order name/value pairs are added to the object is *not*
     preserved by the library. Therefore, iterating an object may return
     name/value pairs in a different order than they were originally stored. In
-    fact, keys will be traversed in alphabetical order as `std::map` with
+    fact, keys will be traversed in alphabetical order as `std::map_` with
     `std::less` is used by default. Please note this behavior conforms to [RFC
     7159](http://rfc7159.net/rfc7159), because any order implements the
     specified "unordered" nature of JSON objects.
@@ -17183,11 +17183,11 @@ class basic_json
     @brief a type for a string
 
     [RFC 7159](http://rfc7159.net/rfc7159) describes JSON strings as follows:
-    > A string is a sequence of zero or more Unicode characters.
+    > A string is a sequence of zero or more Unicode characters_.
 
     To store objects in C++, a type is defined by the template parameter
     described below. Unicode values are split by the JSON class into
-    byte-sized characters during deserialization.
+    byte-sized characters_ during deserialization.
 
     @tparam StringType  the container to store strings (e.g., `std::string`).
     Note this container is used for keys/names in objects, see @ref object_t.
@@ -17205,7 +17205,7 @@ class basic_json
 
     Strings are stored in UTF-8 encoding. Therefore, functions like
     `std::string::size()` or `std::string::length()` return the number of
-    bytes in the string rather than the number of characters or glyphs.
+    bytes in the string rather than the number of characters_ or glyphs.
 
     #### String comparison
 
@@ -17216,7 +17216,7 @@ class basic_json
     > comparison numerically, code unit by code unit, are interoperable in the
     > sense that implementations will agree in all cases on equality or
     > inequality of two strings. For example, implementations that compare
-    > strings with escaped characters unconverted may incorrectly find that
+    > strings with escaped characters_ unconverted may incorrectly find that
     > `"a\\b"` and `"a\u005Cb"` are not equal.
 
     This implementation is interoperable as it does compare strings code unit
@@ -18018,7 +18018,7 @@ class basic_json
       `std::multiset`, and `std::unordered_multiset` with a `value_type` from
       which a @ref basic_json value can be constructed.
     - **objects**: @ref object_t and all kinds of compatible associative
-      containers such as `std::map`, `std::unordered_map`, `std::multimap`,
+      containers such as `std::map_`, `std::unordered_map`, `std::multimap`,
       and `std::unordered_multimap` with a `key_type` compatible to
       @ref string_t and a `value_type` from which a @ref basic_json value can
       be constructed.
@@ -18500,7 +18500,7 @@ class basic_json
       must be `begin()` and @a last must be `end()`. In this case, the value is
       copied. Otherwise, invalid_iterator.204 is thrown.
     - In case of structured types (array, object), the constructor behaves as
-      similar versions for `std::vector` or `std::map`; that is, a JSON array
+      similar versions for `std::vector` or `std::map_`; that is, a JSON array
       or object is constructed from the values in the range.
 
     @tparam InputIT an input iterator type (@ref iterator or @ref
@@ -18867,9 +18867,9 @@ class basic_json
     representation.
     @param[in] indent_char The character to use for indentation if @a indent is
     greater than `0`. The default is ` ` (space).
-    @param[in] ensure_ascii If @a ensure_ascii is true, all non-ASCII characters
+    @param[in] ensure_ascii If @a ensure_ascii is true, all non-ASCII characters_
     in the output are escaped with `\uXXXX` sequences, and the result consists
-    of ASCII characters only.
+    of ASCII characters_ only.
     @param[in] error_handler  how to react on decoding errors; there are three
     possible values: `strict` (throws and exception in case a decoding error
     occurs; default), `replace` (replace invalid UTF-8 sequences with U+FFFD),
@@ -20845,7 +20845,7 @@ class basic_json
     @param[in] key value of the elements to remove
 
     @return Number of elements removed. If @a ObjectType is the default
-    `std::map` type, the return value will always be `0` (@a key was not
+    `std::map_` type, the return value will always be `0` (@a key was not
     found) or `1` (@a key was found).
 
     @post References and iterators to the erased elements are invalidated.
@@ -20987,7 +20987,7 @@ class basic_json
     @brief returns the number of occurrences of a key in a JSON object
 
     Returns the number of elements with key @a key. If ObjectType is the
-    default `std::map` type, the return value will always be `0` (@a key was
+    default `std::map_` type, the return value will always be `0` (@a key was
     not found) or `1` (@a key was found).
 
     @note This method always returns `0` when executed on a JSON type that is
@@ -23231,8 +23231,8 @@ class basic_json
     @tparam InputType A compatible input, for instance
     - an std::istream object
     - a FILE pointer
-    - a C-style array of characters
-    - a pointer to a null-terminated string of single byte characters
+    - a C-style array of characters_
+    - a pointer to a null-terminated string of single byte characters_
     - an object obj for which begin(obj) and end(obj) produces a valid pair of
       iterators.
 
@@ -23349,8 +23349,8 @@ class basic_json
     @tparam InputType A compatible input, for instance
     - an std::istream object
     - a FILE pointer
-    - a C-style array of characters
-    - a pointer to a null-terminated string of single byte characters
+    - a C-style array of characters_
+    - a pointer to a null-terminated string of single byte characters_
     - an object obj for which begin(obj) and end(obj) produces a valid pair of
       iterators.
 
@@ -23399,8 +23399,8 @@ class basic_json
     This function reads from a compatible input. Examples are:
     - an std::istream object
     - a FILE pointer
-    - a C-style array of characters
-    - a pointer to a null-terminated string of single byte characters
+    - a C-style array of characters_
+    - a pointer to a null-terminated string of single byte characters_
     - an object obj for which begin(obj) and end(obj) produces a valid pair of
       iterators.
 
@@ -23642,11 +23642,11 @@ class basic_json
     array           | *size*: 256..65535                         | array (2 bytes follow)             | 0x99
     array           | *size*: 65536..4294967295                  | array (4 bytes follow)             | 0x9A
     array           | *size*: 4294967296..18446744073709551615   | array (8 bytes follow)             | 0x9B
-    object          | *size*: 0..23                              | map                                | 0xA0..0xB7
-    object          | *size*: 23..255                            | map (1 byte follow)                | 0xB8
-    object          | *size*: 256..65535                         | map (2 bytes follow)               | 0xB9
-    object          | *size*: 65536..4294967295                  | map (4 bytes follow)               | 0xBA
-    object          | *size*: 4294967296..18446744073709551615   | map (8 bytes follow)               | 0xBB
+    object          | *size*: 0..23                              | map_                                | 0xA0..0xB7
+    object          | *size*: 23..255                            | map_ (1 byte follow)                | 0xB8
+    object          | *size*: 256..65535                         | map_ (2 bytes follow)               | 0xB9
+    object          | *size*: 65536..4294967295                  | map_ (4 bytes follow)               | 0xBA
+    object          | *size*: 4294967296..18446744073709551615   | map_ (8 bytes follow)               | 0xBB
     binary          | *size*: 0..23                              | byte string                        | 0x40..0x57
     binary          | *size*: 23..255                            | byte string (1 byte follow)        | 0x58
     binary          | *size*: 256..65535                         | byte string (2 bytes follow)       | 0x59
@@ -23749,9 +23749,9 @@ class basic_json
     array           | *size*: 0..15                     | fixarray         | 0x90..0x9F
     array           | *size*: 16..65535                 | array 16         | 0xDC
     array           | *size*: 65536..4294967295         | array 32         | 0xDD
-    object          | *size*: 0..15                     | fix map          | 0x80..0x8F
-    object          | *size*: 16..65535                 | map 16           | 0xDE
-    object          | *size*: 65536..4294967295         | map 32           | 0xDF
+    object          | *size*: 0..15                     | fix map_          | 0x80..0x8F
+    object          | *size*: 16..65535                 | map_ 16           | 0xDE
+    object          | *size*: 65536..4294967295         | map_ 32           | 0xDF
     binary          | *size*: 0..255                    | bin 8            | 0xC4
     binary          | *size*: 256..65535                | bin 16           | 0xC5
     binary          | *size*: 65536..4294967295         | bin 32           | 0xC6
@@ -23837,7 +23837,7 @@ class basic_json
     number_float    | *any value*                       | float64     | `dragon`
     string          | *with shortest length indicator*  | string      | `S`
     array           | *see notes on optimized format*   | array       | `[`
-    object          | *see notes on optimized format*   | map         | `{`
+    object          | *see notes on optimized format*   | map_         | `{`
 
     @note The mapping is **complete** in the sense that any JSON value type
           can be converted to a UBJSON value.
@@ -24035,12 +24035,12 @@ class basic_json
     array                  | array           | 0x9A
     array                  | array           | 0x9B
     array                  | array           | 0x9F
-    map                    | object          | 0xA0..0xB7
-    map                    | object          | 0xB8
-    map                    | object          | 0xB9
-    map                    | object          | 0xBA
-    map                    | object          | 0xBB
-    map                    | object          | 0xBF
+    map_                    | object          | 0xA0..0xB7
+    map_                    | object          | 0xB8
+    map_                    | object          | 0xB9
+    map_                    | object          | 0xBA
+    map_                    | object          | 0xBB
+    map_                    | object          | 0xBF
     False                  | `false`         | 0xF4
     True                   | `true`          | 0xF5
     Null                   | `null`          | 0xF6
@@ -24059,7 +24059,7 @@ class basic_json
              - simple values (0xE0..0xF3, 0xF8)
              - undefined (0xF7)
 
-    @warning CBOR allows map keys of any type, whereas JSON only allows
+    @warning CBOR allows map_ keys of any type, whereas JSON only allows
              strings as keys in object values. Therefore, CBOR maps with keys
              other than UTF-8 strings are rejected (parse_error.113).
 
@@ -24081,7 +24081,7 @@ class basic_json
     file was not reached when @a strict was set to true
     @throw parse_error.112 if unsupported features from CBOR were
     used in the given input @a v or if the input is not valid CBOR
-    @throw parse_error.113 if a string was expected as map key, but not found
+    @throw parse_error.113 if a string was expected as map_ key, but not found
 
     @complexity Linear in the size of the input @a i.
 
@@ -24189,8 +24189,8 @@ class basic_json
     str 32           | string          | 0xDB
     array 16         | array           | 0xDC
     array 32         | array           | 0xDD
-    map 16           | object          | 0xDE
-    map 32           | object          | 0xDF
+    map_ 16           | object          | 0xDE
+    map_ 32           | object          | 0xDF
     bin 8            | binary          | 0xC4
     bin 16           | binary          | 0xC5
     bin 32           | binary          | 0xC6
@@ -24222,7 +24222,7 @@ class basic_json
     file was not reached when @a strict was set to true
     @throw parse_error.112 if unsupported features from MessagePack were
     used in the given input @a i or if the input is not valid MessagePack
-    @throw parse_error.113 if a string was expected as map key, but not found
+    @throw parse_error.113 if a string was expected as map_ key, but not found
 
     @complexity Linear in the size of the input @a i.
 

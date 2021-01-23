@@ -13,6 +13,7 @@ Zombie::Zombie() {
   damage = conf.Get<std::int32_t>("Zombie", "damage");
   symbol = conf.Get<std::string>("Zombie", "symbol")[0];
   priority = conf.Get<std::int32_t>("Zombie", "priority");
+  vision = conf.Get<std::int32_t>("Zombie", "vision");
 }
 Zombie::Zombie(int32_t x, int32_t y) : Zombie() {
   cur_location = Point{x, y};
@@ -25,12 +26,12 @@ Point Zombie::Move(int32_t x, int32_t y) {
 
   prev_location = cur_location;
   if (std::abs(vector.x) > std::abs(vector.y)) {
-    int32_t step = (vector.x < 0) ? -1 : 1;
+    std::int32_t step = (vector.x < 0) ? -1 : 1;
     cur_location.x += step;
     return cur_location;
   }
 
-  int32_t step = (vector.y < 0) ? -1 : 1;
+  std::int32_t step = (vector.y < 0) ? -1 : 1;
   cur_location.y += step;
   return cur_location;
 }
@@ -44,9 +45,11 @@ bool Zombie::Collide(Knight *knight) {
   return true;
 }
 bool Zombie::Collide(Dragon *dragon) {
+  (cur_location == prev_location) ? dragon->GoBack() : this->GoBack();
   return true;
 }
 bool Zombie::Collide(Princess *princess) {
+  GoBack();
   return true;
 }
 bool Zombie::Collide(Zombie *zombie) {
@@ -59,7 +62,8 @@ bool Zombie::Collide(Wall *wall) {
 }
 
 bool Zombie::isInView(Point &vector) const {
-  if (vector.x == 0 || std::abs(vector.x) == 1) return std::abs(vector.y) <= 4;
-  if (vector.y == 0 || std::abs(vector.y) == 1) return std::abs(vector.x) <= 4;
-  return std::abs(vector.x * vector.y) <= 9;
+  std::int32_t x = std::abs(vector.x);
+  std::int32_t y = std::abs(vector.y);
+
+  return x * x + y * y <= vision * vision;
 }

@@ -9,8 +9,12 @@
 #include "../Factory/Factory.h"
 #include "../objects/Character/Character.h"
 #include "../objects/Knight/Knight.h"
+#include "../Config/Config.h"
 
-using Characters = std::vector<std::shared_ptr<Character>>;
+using std::shared_ptr;
+using Characters = std::vector<shared_ptr<Character>>;
+
+
 // Вывод карты без мерцания
 // http://vsokovikov.narod.ru/New_MSDN_API/Console/con_fn.htm
 //http://vsokovikov.narod.ru/New_MSDN_API/Console/scrbuf.htm
@@ -22,18 +26,78 @@ using Characters = std::vector<std::shared_ptr<Character>>;
 class Map {
  private:
   std::vector<std::string> map;
-  Characters *characters;
-  Factory *factory_;
+  shared_ptr<Characters> characters_;
+  shared_ptr<Factory> factory_;
+  char fog_symbol = 'A';
+  std::int32_t fog_radius = 2;
 
-  void ReadFile();
-  void FillMap();
-  void CreateCharacters();
+  void ReadFile() {
+    std::string line;
+    std::ifstream fin("map.txt");
+
+    if (fin.is_open()) {
+      while (getline(fin, line)) {
+        map.push_back(line);
+      }
+    }
+
+    fin.close();
+  }
+  void FogUp(std::shared_ptr<Character> &knight_) {
+    for (int i = 0; i < Height(); i++) {
+      for (int j = 0; j < Width(); j++) {
+        std::int32_t x = knight_->X() - j;
+        std::int32_t y = knight_->Y() - i;
+        if (x * x + y * y >= fog_radius * fog_radius)
+          map[i][j] = fog_symbol;
+      }
+    }
+  }
+  void FillMap(std::shared_ptr<Character> &knight_) {
+    map = std::vector<std::string>(Height(), std::string(Width(), '.'));
+    for (auto &i : (*characters_)) {
+      map[i->Y()][i->X()] = i->Symbol();
+    }
+
+    FogUp(knight_);
+  }
+  void CreateCharacters() {
+    for (int i = 0; i < map.size(); i++) {
+      for (int j = 0; j < map[i].size(); j++) {
+        if (map[i][j] != '.') {
+          characters_->push_back(shared_ptr<Character>(factory_->create(map[i][j], j, i)));
+        }
+      }
+    }
+
+    std::sort(characters_->begin(), characters_->end(),
+              [](shared_ptr<Character> &x, shared_ptr<Character> &y) {
+                return x->Priority() < y->Priority();
+              });
+  }
  public:
   Map() = default;
-  Map(Characters *characters, Factory *factory);
-  void Draw();
-  std::size_t Width();
-  std::size_t Height();
+  Map(shared_ptr<Characters> &characters, shared_ptr<Factory> &factory)
+      : characters_(characters), factory_(factory) {
+    ReadFile();
+    CreateCharacters();
+
+    Config conf("config.json");
+    fog_symbol = conf.Get<std::string>("Fog", "symbol")[0];
+    fog_radius = conf.Get<std::int32_t>("Fog", "radius");
+  }
+  void Draw(std::shared_ptr<Character> &knight_) {
+    FillMap(knight_);
+    for (auto &i : map) {
+      std::cout << i << std::endl;
+    }
+  }
+  std::size_t Width() {
+    return (!map.empty()) ? map[0].size() : 0;
+  }
+  std::size_t Height() {
+    return map.size();
+  }
 };
 
 #endif //ROUGELIKE_GAME_OBJECTS_MAP_MAP_H_

@@ -14,13 +14,14 @@
 #include "../objects/Wall/Wall.h"
 #include "../objects/Zombie/Zombie.h"
 
+using Characters = std::vector<std::shared_ptr<Character>>;
+
 class GameLoop {
  private:
-  Factory factory_;  // todo сменить все на shared_ptr
-  Map map;
-  std::vector<std::shared_ptr<Character>> characters;
+  std::shared_ptr<Factory> factory_;
+  std::shared_ptr<Map> map_;
+  std::shared_ptr<Characters> characters_;
   std::shared_ptr<Character> knight_;
-  Config conf;
 
 
  public:
@@ -29,7 +30,9 @@ class GameLoop {
   void MoveMobs();
   void ValidateMoves();
   void RemoveDead();
-  void Start();
+  static void GameOver(bool);
+  void StartMenu();
+  void StartGame();
   void FindKnight();
 };
 

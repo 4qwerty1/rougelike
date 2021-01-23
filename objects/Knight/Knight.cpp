@@ -1,4 +1,5 @@
 #include "Knight.h"
+#include "../../GameLoop/GameLoop.h"
 #include "../../Config/Config.h"
 #include "../Dragon/Dragon.h"
 #include "../Princess/Princess.h"
@@ -26,15 +27,18 @@ Point Knight::Move(std::int32_t x, std::int32_t y) {
 }
 
 bool Knight::Collide(Character *character) {
-  return character->Collide(this);;
+  return character->Collide(this);
 }
 bool Knight::Collide(Knight *knight) {
   return true;
 }
 bool Knight::Collide(Dragon *dragon) {
+  this->hp -= dragon->Damage();
+  dragon->TakeDamage(this->damage);
   return true;
 }
 bool Knight::Collide(Princess *princess) {
+  GameLoop::GameOver(true);
   return true;
 }
 bool Knight::Collide(Wall *wall) {
